@@ -10,6 +10,7 @@ const Form = () => {
         type="text"
         name="pokemonName"
         placeholder="pokemonを英語で入力"
+        value={contextValues.pokemonName}
       ></input>
       <button>検索</button>
     </form>

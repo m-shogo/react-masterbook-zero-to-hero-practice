@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 export const AppContext = createContext();
 
 const ContextProvider = (props) => {
+  const [loading, setLoading] = useState(false);
   const [pokemonName, setPokemonName] = useState(
     Math.floor(Math.random() * 1026)
   );
@@ -21,6 +22,7 @@ const ContextProvider = (props) => {
 
   const getPokemonData = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const responseJapan = await fetch(
       `https://pokeapi.co/api/v2/pokemon-species/${pokemonName}`
     );
@@ -53,11 +55,13 @@ const ContextProvider = (props) => {
       img: jsonData.sprites.front_default,
       text: jptext,
     });
-
+    setLoading(false);
+    setPokemonName("");
     navigate(`/pokemon/${jsonData.id}`);
   };
 
   const contextValues = {
+    loading: loading,
     pokemonName: pokemonName,
     pokemonData: pokemonData,
     setPokemonName: setPokemonName,
