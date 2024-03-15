@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import Form from "./components/Form";
-import Pokemon from "./components/Pokemon";
+import Home from "./pages/Home";
+import Pokemonpage from "./pages/PokemonPage";
 import "./styles/App.css";
 
 const App = () => {
@@ -16,6 +18,7 @@ const App = () => {
     area: "",
     category: "",
   });
+  const navigate = useNavigate();
 
   const getPokemonData = async (e) => {
     e.preventDefault();
@@ -41,13 +44,20 @@ const App = () => {
       jpname: jpname,
       img: jsonData.sprites.front_default,
     });
-    console.log(setPokemonData);
+
+    navigate(`/pokemon/${jsonData.id}`);
   };
   return (
     <div>
       <Header />
       <Form setPokemonName={setPokemonName} getPokemonData={getPokemonData} />
-      <Pokemon pokemonData={pokemonData} />
+      <Routes>
+        <Route index element={<Home />} />
+        <Route
+          path="/pokemon/:id"
+          element={<Pokemonpage pokemonData={pokemonData} />}
+        />
+      </Routes>
     </div>
   );
 };
