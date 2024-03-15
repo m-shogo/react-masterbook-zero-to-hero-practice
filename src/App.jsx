@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import Header from "./components/Header";
-import Form from "./components/Form";
+import Layout from "./layout";
 import Home from "./pages/Home";
 import Pokemonpage from "./pages/PokemonPage";
 import "./styles/App.css";
 
 const App = () => {
-  const [pokemonName, setPokemonName] = useState();
+  const [pokemonName, setPokemonName] = useState(
+    Math.floor(Math.random() * 1026)
+  );
   const [pokemonData, setPokemonData] = useState({
     id: "",
     name: "",
@@ -49,14 +50,21 @@ const App = () => {
   };
   return (
     <div>
-      <Header />
-      <Form setPokemonName={setPokemonName} getPokemonData={getPokemonData} />
       <Routes>
-        <Route index element={<Home />} />
         <Route
-          path="/pokemon/:id"
-          element={<Pokemonpage pokemonData={pokemonData} />}
-        />
+          element={
+            <Layout
+              setPokemonName={setPokemonName}
+              getPokemonData={getPokemonData}
+            />
+          }
+        >
+          <Route index element={<Home />} />
+          <Route
+            path="/pokemon/:id"
+            element={<Pokemonpage pokemonData={pokemonData} />}
+          />
+        </Route>
       </Routes>
     </div>
   );
