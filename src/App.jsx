@@ -1,43 +1,53 @@
 import { useState } from "react";
 import Header from "./components/Header";
 import Form from "./components/Form";
-import Recipe from "./components/Recipe";
+import Pokemon from "./components/Pokemon";
 import "./styles/App.css";
 
 const App = () => {
-  const [mealName, setMealName] = useState();
-  const [mealData, setMealData] = useState({
+  const [pokemonName, setPokemonName] = useState();
+  const [pokemonData, setPokemonData] = useState({
     id: "",
     name: "",
+    jpname: "",
     instructions: "",
-    img: "",
+    img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
     source: "",
     area: "",
     category: "",
   });
 
-  const getMealData = async (e) => {
+  const getPokemonData = async (e) => {
     e.preventDefault();
-    const response = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/search.php?s=${mealName}`
+    const responseJapan = await fetch(
+      `https://pokeapi.co/api/v2/pokemon-species/${pokemonName}`
     );
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
+    );
+    const jsonDataJapan = await responseJapan.json();
     const jsonData = await response.json();
-    setMealData({
-      id: jsonData.meals[0].idMeal,
-      name: jsonData.meals[0].strMeal,
-      instructions: jsonData.meals[0].strInstructions,
-      img: jsonData.meals[0].strMealThumb,
-      source: jsonData.meals[0].strYoutube,
-      area: jsonData.meals[0].strArea,
-      category: jsonData.meals[0].strCategory,
-    });
-  };
 
+    const nameInfo = jsonDataJapan.names.find(
+      (names) => names.language.name === "ja-Hrkt"
+    );
+    let jpname = "日本語名が見つかりません。";
+    if (nameInfo) {
+      jpname = nameInfo.name;
+    }
+    setPokemonData({
+      id: jsonData.id,
+      name: jsonData.name,
+      jpname: jpname,
+      img: jsonData.sprites.front_default,
+    });
+    console.log(setPokemonData);
+  };
   return (
     <div>
       <Header />
-      <Form setMealName={setMealName} getMealData={getMealData} />
-      <Recipe />
+      <Form setPokemonName={setPokemonName} getPokemonData={getPokemonData} />
+      <Pokemon pokemonData={pokemonData} />
     </div>
   );
 };
