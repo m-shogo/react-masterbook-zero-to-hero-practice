@@ -1,9 +1,9 @@
 import Pokemon from "../components/Pokemon";
 
-const PokemonPage = (props) => {
+const PokemonPage = () => {
   return (
     <>
-      <Pokemon pokemonData={props.pokemonData} />
+      <Pokemon />
     </>
   );
 };

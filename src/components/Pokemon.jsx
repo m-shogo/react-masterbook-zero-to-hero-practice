@@ -1,11 +1,22 @@
-const Pokemon = (props) => {
+import { useContext } from "react";
+import { AppContext } from "../context";
+
+const Pokemon = () => {
+  const contextValues = useContext(AppContext);
   return (
     <>
-      {props.pokemonData.jpname && <h1>{props.pokemonData.jpname}</h1>}
-      <h2>{props.pokemonData.name}</h2>
-      {props.pokemonData.img && (
-        <img src={props.pokemonData.img} alt="Pokemon" />
-      )}
+      <div className="recipe">
+        {contextValues.pokemonData.jpname && (
+          <h1>{contextValues.pokemonData.jpname}</h1>
+        )}
+        <h2>{contextValues.pokemonData.name}</h2>
+        {contextValues.pokemonData.img && (
+          <img src={contextValues.pokemonData.img} alt="Pokemon" />
+        )}
+        {contextValues.pokemonData.text && (
+          <p>{contextValues.pokemonData.text}</p>
+        )}
+      </div>
     </>
   );
 };
