@@ -23,41 +23,46 @@ const ContextProvider = (props) => {
   const getPokemonData = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const responseJapan = await fetch(
-      `https://pokeapi.co/api/v2/pokemon-species/${pokemonName}`
-    );
-    const response = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
-    );
-    const jsonDataJapan = await responseJapan.json();
-    const jsonData = await response.json();
 
-    const japanNameInfo = jsonDataJapan.names.find(
-      (names) => names.language.name === "ja-Hrkt"
-    );
-    let jpname = "日本語名が見つかりません。";
-    if (japanNameInfo) {
-      jpname = japanNameInfo.name;
+    try{
+      const responseJapan = await fetch(
+        `https://pokeapi.co/api/v2/pokemon-species/${pokemonName}`
+      );
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
+      );
+      const jsonDataJapan = await responseJapan.json();
+      const jsonData = await response.json();
+  
+      const japanNameInfo = jsonDataJapan.names.find(
+        (names) => names.language.name === "ja-Hrkt"
+      );
+      let jpname = "日本語名が見つかりません。";
+      if (japanNameInfo) {
+        jpname = japanNameInfo.name;
+      }
+  
+      const japanTextInfo = jsonDataJapan.flavor_text_entries.find(
+        (flavor_text_entries) => flavor_text_entries.language.name === "ja-Hrkt"
+      );
+      let jptext = "日本語説明が見つかりません。";
+      if (japanTextInfo) {
+        jptext = japanTextInfo.flavor_text;
+      }
+  
+      setPokemonData({
+        id: jsonData.id,
+        name: jsonData.name,
+        jpname: jpname,
+        img: jsonData.sprites.front_default,
+        text: jptext,
+      });
+      setLoading(false);
+      setPokemonName("");
+      navigate(`/pokemon/${jsonData.id}`);
+    } catch(err){
+      alert("エラーが起きました。再読み込みしてください")
     }
-
-    const japanTextInfo = jsonDataJapan.flavor_text_entries.find(
-      (flavor_text_entries) => flavor_text_entries.language.name === "ja-Hrkt"
-    );
-    let jptext = "日本語説明が見つかりません。";
-    if (japanTextInfo) {
-      jptext = japanTextInfo.flavor_text;
-    }
-
-    setPokemonData({
-      id: jsonData.id,
-      name: jsonData.name,
-      jpname: jpname,
-      img: jsonData.sprites.front_default,
-      text: jptext,
-    });
-    setLoading(false);
-    setPokemonName("");
-    navigate(`/pokemon/${jsonData.id}`);
   };
 
   const contextValues = {
