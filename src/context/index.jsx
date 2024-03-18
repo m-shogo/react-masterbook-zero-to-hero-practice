@@ -1,5 +1,6 @@
 import { useState, createContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDarkMode } from "../hooks/useDarkMode";
 
 export const AppContext = createContext();
 
@@ -18,13 +19,15 @@ const ContextProvider = (props) => {
     area: "",
     category: "",
   });
+
+  const [theme, handleThemeSwitch] = useDarkMode();
   const navigate = useNavigate();
 
   const getPokemonData = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    try{
+    try {
       const responseJapan = await fetch(
         `https://pokeapi.co/api/v2/pokemon-species/${pokemonName}`
       );
@@ -33,7 +36,7 @@ const ContextProvider = (props) => {
       );
       const jsonDataJapan = await responseJapan.json();
       const jsonData = await response.json();
-  
+
       const japanNameInfo = jsonDataJapan.names.find(
         (names) => names.language.name === "ja-Hrkt"
       );
@@ -41,7 +44,7 @@ const ContextProvider = (props) => {
       if (japanNameInfo) {
         jpname = japanNameInfo.name;
       }
-  
+
       const japanTextInfo = jsonDataJapan.flavor_text_entries.find(
         (flavor_text_entries) => flavor_text_entries.language.name === "ja-Hrkt"
       );
@@ -49,7 +52,7 @@ const ContextProvider = (props) => {
       if (japanTextInfo) {
         jptext = japanTextInfo.flavor_text;
       }
-  
+
       setPokemonData({
         id: jsonData.id,
         name: jsonData.name,
@@ -58,10 +61,9 @@ const ContextProvider = (props) => {
         text: jptext,
       });
       setLoading(false);
-      setPokemonName("");
       navigate(`/pokemon/${jsonData.id}`);
-    } catch(err){
-      alert("エラーが起きました。再読み込みしてください")
+    } catch (err) {
+      alert("エラーが起きました。再読み込みしてください");
     }
   };
 
@@ -69,8 +71,10 @@ const ContextProvider = (props) => {
     loading: loading,
     pokemonName: pokemonName,
     pokemonData: pokemonData,
+    theme: theme,
     setPokemonName: setPokemonName,
     getPokemonData: getPokemonData,
+    handleThemeSwitch: handleThemeSwitch,
   };
 
   return (
