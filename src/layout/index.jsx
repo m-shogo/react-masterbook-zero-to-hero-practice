@@ -1,20 +1,23 @@
+import { useContext } from "react";
+import { AppContext } from "../context";
 import { Outlet } from "react-router-dom";
-import { useDarkMode } from "../hooks/useDarkMode";
 import Header from "../components/Header";
 import Form from "../components/Form";
 import History from "../components/History";
+import Button from "../components/Button";
 
 const Layout = () => {
-  const [theme, handleThemeSwitch] = useDarkMode();
+  const contextValues = useContext(AppContext);
 
   return (
     <div
       className="mode-body"
-      data-theme={theme === "light" ? "light" : "dark"}
+      data-theme={contextValues.theme === "light" ? "light" : "dark"}
     >
       <div className="container">
         <Header />
-        <button onClick={handleThemeSwitch}>モード</button>
+        <Button type="darkmode" />
+        <Button type="delete" />
         <Form />
         <History />
         <Outlet />

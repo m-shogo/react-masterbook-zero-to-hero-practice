@@ -5,7 +5,6 @@ const History = () => {
   const contextValues = useContext(AppContext);
   return (
     <>
-      <button onClick={contextValues.handleDeleteHistory}>削除</button>
       <ul>
         {contextValues.imgUrl.map((url, index) => (
           <li key={index}>

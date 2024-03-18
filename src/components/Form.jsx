@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AppContext } from "../context";
+import Button from "./Button";
 
 const Form = () => {
   const contextValues = useContext(AppContext);
@@ -12,7 +13,7 @@ const Form = () => {
         placeholder="pokemonを英語で入力"
         value={contextValues.pokemonName}
       ></input>
-      <button>検索</button>
+      <Button type="search" />
     </form>
   );
 };
