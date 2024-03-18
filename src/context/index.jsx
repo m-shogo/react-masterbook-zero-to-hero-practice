@@ -1,10 +1,12 @@
-import { useState, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDarkMode } from "../hooks/useDarkMode";
+import { addHistory } from "../utils/addHistory";
 
 export const AppContext = createContext();
 
 const ContextProvider = (props) => {
+  const [imgUrl, setImgUrl] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pokemonName, setPokemonName] = useState(
     Math.floor(Math.random() * 1026)
@@ -61,13 +63,25 @@ const ContextProvider = (props) => {
         text: jptext,
       });
       setLoading(false);
+      addHistory(jsonData.sprites.front_default);
       navigate(`/pokemon/${jsonData.id}`);
     } catch (err) {
       alert("エラーが起きました。再読み込みしてください");
     }
   };
+  
+  useEffect(() => {
+    const savedUrl = JSON.parse(localStorage.getItem("history"));
+    savedUrl && setImgUrl(savedUrl);
+  }, [pokemonData]);
+
+  const handleDeleteHistory = () => {
+    localStorage.removeItem("history");
+    setImgUrl([]);
+  };
 
   const contextValues = {
+    imgUrl: imgUrl,
     loading: loading,
     pokemonName: pokemonName,
     pokemonData: pokemonData,
@@ -75,6 +89,7 @@ const ContextProvider = (props) => {
     setPokemonName: setPokemonName,
     getPokemonData: getPokemonData,
     handleThemeSwitch: handleThemeSwitch,
+    handleDeleteHistory: handleDeleteHistory,
   };
 
   return (
