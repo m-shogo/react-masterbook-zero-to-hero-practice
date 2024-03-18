@@ -12,6 +12,10 @@ const App = () => {
         <Route element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="/pokemon/:id" element={<Pokemonpage />} />
+          <Route
+            path="*"
+            element={<h1>Not Found ヘッダーロゴをクリックしてください</h1>}
+          />
         </Route>
       </Routes>
     </ContextProvider>
